@@ -46,6 +46,9 @@ public class User {
     @Column(nullable = false)
     private String role;
 
+    @Column(nullable = false)
+    private boolean active = true;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
@@ -54,6 +57,10 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LeaveRequest> leaveRequests;
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 
     @PrePersist
     protected void onCreate() {

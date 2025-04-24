@@ -1,15 +1,13 @@
 package com.africahr.leave.controller;
 
-import com.africahr.leave.dto.LeaveBalanceDto;
+import com.africahr.leave.dto.LeaveBalanceAdjustmentDto;
 import com.africahr.leave.model.LeaveBalance;
-import com.africahr.leave.model.LeaveType;
-import com.africahr.leave.model.User;
-import com.africahr.leave.service.LeaveBalanceService;
-import com.africahr.leave.service.LeaveTypeService;
+import com.africahr.leave.service.LeaveAccrualService;
 import com.africahr.leave.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,91 +16,41 @@ import java.util.List;
 @RequestMapping("/api/leave-balances")
 @RequiredArgsConstructor
 public class LeaveBalanceController {
-    private final LeaveBalanceService leaveBalanceService;
-    private final LeaveTypeService leaveTypeService;
+    private final LeaveAccrualService leaveAccrualService;
     private final UserService userService;
 
-    @PostMapping
-    public ResponseEntity<LeaveBalance> createLeaveBalance(@Valid @RequestBody LeaveBalanceDto leaveBalanceDto) {
-        User user = userService.getUserById(leaveBalanceDto.getUserId());
-        LeaveType leaveType = leaveTypeService.getLeaveTypeById(leaveBalanceDto.getLeaveTypeId());
-        
-        LeaveBalance leaveBalance = LeaveBalance.builder()
-            .user(user)
-            .leaveType(leaveType)
-            .totalDays(leaveBalanceDto.getTotalDays())
-            .usedDays(leaveBalanceDto.getUsedDays())
-            .remainingDays(leaveBalanceDto.getRemainingDays())
-            .carriedForwardDays(leaveBalanceDto.getCarriedForwardDays())
-            .year(leaveBalanceDto.getYear())
-            .lastUpdated(leaveBalanceDto.getLastUpdated())
-            .build();
-            
-        return ResponseEntity.ok(leaveBalanceService.createLeaveBalance(leaveBalance));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<LeaveBalance> updateLeaveBalance(
-            @PathVariable Long id,
-            @Valid @RequestBody LeaveBalanceDto leaveBalanceDto) {
-        User user = userService.getUserById(leaveBalanceDto.getUserId());
-        LeaveType leaveType = leaveTypeService.getLeaveTypeById(leaveBalanceDto.getLeaveTypeId());
-        
-        LeaveBalance leaveBalance = LeaveBalance.builder()
-            .id(id)
-            .user(user)
-            .leaveType(leaveType)
-            .totalDays(leaveBalanceDto.getTotalDays())
-            .usedDays(leaveBalanceDto.getUsedDays())
-            .remainingDays(leaveBalanceDto.getRemainingDays())
-            .carriedForwardDays(leaveBalanceDto.getCarriedForwardDays())
-            .year(leaveBalanceDto.getYear())
-            .lastUpdated(leaveBalanceDto.getLastUpdated())
-            .build();
-            
-        return ResponseEntity.ok(leaveBalanceService.updateLeaveBalance(id, leaveBalance));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteLeaveBalance(@PathVariable Long id) {
-        leaveBalanceService.deleteLeaveBalance(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<LeaveBalance> getLeaveBalanceById(@PathVariable Long id) {
-        return ResponseEntity.ok(leaveBalanceService.getLeaveBalanceById(id));
+    @PostMapping("/adjust")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('HR')")
+    public ResponseEntity<LeaveBalance> adjustLeaveBalance(
+            @Valid @RequestBody LeaveBalanceAdjustmentDto adjustment) {
+        return ResponseEntity.ok(leaveAccrualService.adjustLeaveBalance(adjustment));
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<LeaveBalance>> getLeaveBalancesByUser(@PathVariable Long userId) {
-        User user = userService.getUserById(userId);
-        return ResponseEntity.ok(leaveBalanceService.getLeaveBalancesByUser(user));
+    @PreAuthorize("hasRole('ADMIN') or hasRole('HR') or #userId == authentication.principal.id")
+    public ResponseEntity<List<LeaveBalance>> getUserLeaveBalances(@PathVariable Long userId) {
+        return ResponseEntity.ok(leaveAccrualService.getLeaveBalances(userService.getUserById(userId)));
     }
 
-    @GetMapping("/user/{userId}/type/{leaveType}/year/{year}")
-    public ResponseEntity<LeaveBalance> getLeaveBalanceByUserAndTypeAndYear(
+    @GetMapping("/department/{departmentId}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('HR')")
+    public ResponseEntity<List<LeaveBalance>> getDepartmentLeaveBalances(
+            @PathVariable Long departmentId) {
+        return ResponseEntity.ok(leaveAccrualService.getLeaveBalancesByDepartment(departmentId));
+    }
+
+    @GetMapping("/year/{year}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('HR')")
+    public ResponseEntity<List<LeaveBalance>> getLeaveBalancesByYear(@PathVariable int year) {
+        return ResponseEntity.ok(leaveAccrualService.getLeaveBalancesByYear(year));
+    }
+
+    @GetMapping("/{userId}/{leaveTypeId}/{year}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('HR') or #userId == authentication.principal.id")
+    public ResponseEntity<LeaveBalance> getLeaveBalance(
             @PathVariable Long userId,
-            @PathVariable String leaveType,
+            @PathVariable Long leaveTypeId,
             @PathVariable int year) {
-        User user = userService.getUserById(userId);
-        LeaveType type = leaveTypeService.getLeaveTypeByName(leaveType);
-        return ResponseEntity.ok(leaveBalanceService.getLeaveBalanceByUserAndTypeAndYear(user, type, year));
-    }
-
-    @GetMapping("/user/{userId}/year/{year}")
-    public ResponseEntity<List<LeaveBalance>> getLeaveBalancesByUserAndYear(
-            @PathVariable Long userId,
-            @PathVariable int year) {
-        User user = userService.getUserById(userId);
-        return ResponseEntity.ok(leaveBalanceService.getLeaveBalancesByUserAndYear(user, year));
-    }
-
-    @PutMapping("/{id}/adjust")
-    public ResponseEntity<LeaveBalance> adjustLeaveBalance(
-            @PathVariable Long id,
-            @RequestParam double days,
-            @RequestParam String operation) {
-        return ResponseEntity.ok(leaveBalanceService.adjustLeaveBalance(id, days));
+        return ResponseEntity.ok(leaveAccrualService.getLeaveBalance(userId, leaveTypeId, year));
     }
 } 

@@ -1,20 +1,16 @@
 package com.africahr.leave.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Data
 @Entity
 @Table(name = "leave_accrual_rules")
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class LeaveAccrualRule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,35 +20,29 @@ public class LeaveAccrualRule {
     @JoinColumn(name = "leave_type_id", nullable = false)
     private LeaveType leaveType;
 
-    @Column(name = "accrual_rate", nullable = false, precision = 4, scale = 2)
-    private BigDecimal accrualRate; // e.g., 1.66 days per month
+    @Column(nullable = false)
+    private BigDecimal accrualRate;
 
-    @Column(name = "accrual_frequency", nullable = false)
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private AccrualFrequency accrualFrequency;
 
-    @Column(name = "max_carry_forward", nullable = false)
-    private Integer maxCarryForward; // e.g., 5 days
+    @Column(nullable = false)
+    private Integer maxCarryForward;
 
-    @Column(name = "is_active", nullable = false)
-    private boolean active;
+    @Column(nullable = false)
+    private Integer expirationDays;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(nullable = false)
+    private boolean active = true;
+
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
+    @UpdateTimestamp
+    @Column(nullable = false)
+    private LocalDateTime lastUpdated;
 
     public enum AccrualFrequency {
         MONTHLY,

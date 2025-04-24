@@ -27,11 +27,25 @@ public class LeaveType {
     @Column(name = "max_days", nullable = false)
     private Integer maxDays;
 
+    @Column(name = "default_days", nullable = false)
+    private Integer defaultDays;
+
+    @Column(name = "accrual_rate", nullable = false)
+    private Double accrualRate;
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    public Integer getDefaultDays() {
+        return defaultDays;
+    }
+
+    public Double getAccrualRate() {
+        return accrualRate;
+    }
 
     @PrePersist
     protected void onCreate() {
