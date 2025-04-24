@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+
+    <!-- Insert Default Department -->
+    <changeSet id="insert-default-department" author="system">
+        <insert tableName="departments">
+            <column name="id" value="1"/>
+            <column name="name" value="Human Resources"/>
+            <column name="description" value="Human Resources Department"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+    </changeSet>
+
+    <!-- Insert Admin User -->
+    <changeSet id="insert-admin-user" author="system">
+        <insert tableName="users">
+            <column name="id" value="1"/>
+            <column name="email" value="admin@ist.com"/>
+            <column name="password" value="$2a$10$X7J3Y5Z8A9B0C1D2E3F4G5H6I7J8K9L0M1N2O3P4Q5R6S7T8U9V0W1X2Y3Z4"/>
+            <column name="first_name" value="System"/>
+            <column name="last_name" value="Admin"/>
+            <column name="department_id" value="1"/>
+            <column name="role" value="ADMIN"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+    </changeSet>
+
+    <!-- Insert Sample Users -->
+    <changeSet id="insert-sample-users" author="system">
+        <insert tableName="users">
+            <column name="id" value="2"/>
+            <column name="email" value="manager@ist.com"/>
+            <column name="password" value="$2a$10$X7J3Y5Z8A9B0C1D2E3F4G5H6I7J8K9L0M1N2O3P4Q5R6S7T8U9V0W1X2Y3Z4"/>
+            <column name="first_name" value="Department"/>
+            <column name="last_name" value="Manager"/>
+            <column name="department_id" value="1"/>
+            <column name="manager_id" value="1"/>
+            <column name="role" value="MANAGER"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+
+        <insert tableName="users">
+            <column name="id" value="3"/>
+            <column name="email" value="staff@ist.com"/>
+            <column name="password" value="$2a$10$X7J3Y5Z8A9B0C1D2E3F4G5H6I7J8K9L0M1N2O3P4Q5R6S7T8U9V0W1X2Y3Z4"/>
+            <column name="first_name" value="Regular"/>
+            <column name="last_name" value="Staff"/>
+            <column name="department_id" value="1"/>
+            <column name="manager_id" value="2"/>
+            <column name="role" value="STAFF"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+    </changeSet>
+
+    <!-- Insert Leave Types -->
+    <changeSet id="insert-leave-types" author="system">
+        <insert tableName="leave_types">
+            <column name="id" value="1"/>
+            <column name="name" value="Annual Leave"/>
+            <column name="description" value="Paid annual leave"/>
+            <column name="max_days" value="21"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+
+        <insert tableName="leave_types">
+            <column name="id" value="2"/>
+            <column name="name" value="Sick Leave"/>
+            <column name="description" value="Paid sick leave"/>
+            <column name="max_days" value="10"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+    </changeSet>
+
+    <!-- Insert Leave Balances -->
+    <changeSet id="insert-leave-balances" author="system">
+        <insert tableName="leave_balances">
+            <column name="id" value="1"/>
+            <column name="user_id" value="3"/>
+            <column name="leave_type_id" value="1"/>
+            <column name="year" value="2024"/>
+            <column name="total_days" value="21"/>
+            <column name="used_days" value="0"/>
+            <column name="remaining_days" value="21"/>
+            <column name="carried_forward_days" value="0"/>
+            <column name="last_updated" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog> 

@@ -1,0 +1,52 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/leave_management
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    default-schema: public
+    drop-first: true
+    contexts: default
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  application:
+    name: leave-management-africahr-be
+  cloud:
+    azure:
+      active-directory:
+        enabled: true
+        profile:
+          tenant-id: 22081f0f-9d48-4eab-a41d-78eeb43225cf
+        credential:
+          client-id: 6145da12-853d-4708-84ac-4f08da0e1a6f
+        app-id-uri: api://6145da12-853d-4708-84ac-4f08da0e1a6f
+
+leave:
+  management:
+    max-leave-days: 30
+    notification:
+      email:
+        from: ${MAIL_USERNAME} 
