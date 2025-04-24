@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+
+    <changeSet id="3" author="africahr">
+        <!-- Insert departments -->
+        <insert tableName="departments">
+            <column name="name" value="Engineering"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="departments">
+            <column name="name" value="Human Resources"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="departments">
+            <column name="name" value="Finance"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+
+        <!-- Insert leave types -->
+        <insert tableName="leave_types">
+            <column name="name" value="ANNUAL"/>
+            <column name="description" value="Annual leave"/>
+            <column name="max_days" value="30"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="leave_types">
+            <column name="name" value="SICK"/>
+            <column name="description" value="Sick leave"/>
+            <column name="max_days" value="15"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="leave_types">
+            <column name="name" value="MATERNITY"/>
+            <column name="description" value="Maternity leave"/>
+            <column name="max_days" value="90"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="leave_types">
+            <column name="name" value="PATERNITY"/>
+            <column name="description" value="Paternity leave"/>
+            <column name="max_days" value="14"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+
+        <!-- Insert leave accrual rules -->
+        <insert tableName="leave_accrual_rules">
+            <column name="leave_type_id" value="1"/>
+            <column name="accrual_rate" value="2.5"/>
+            <column name="accrual_frequency" value="MONTHLY"/>
+            <column name="max_carry_forward_days" value="10"/>
+            <column name="is_active" value="true"/>
+            <column name="expiration_days" value="365"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="leave_accrual_rules">
+            <column name="leave_type_id" value="2"/>
+            <column name="accrual_rate" value="1.25"/>
+            <column name="accrual_frequency" value="MONTHLY"/>
+            <column name="max_carry_forward_days" value="0"/>
+            <column name="is_active" value="true"/>
+            <column name="expiration_days" value="365"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog> 

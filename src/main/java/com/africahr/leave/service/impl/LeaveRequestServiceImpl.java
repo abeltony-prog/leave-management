@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -21,7 +22,7 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
     @Transactional
     public LeaveRequest createLeaveRequest(LeaveRequest leaveRequest) {
         leaveRequest.setStatus(LeaveStatus.PENDING);
-        leaveRequest.setCreatedAt(LocalDate.now());
+        leaveRequest.setCreatedAt(LocalDateTime.now());
         return leaveRequestRepository.save(leaveRequest);
     }
 
@@ -34,7 +35,7 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
         existingRequest.setEndDate(leaveRequest.getEndDate());
         existingRequest.setHalfDay(leaveRequest.isHalfDay());
         existingRequest.setReason(leaveRequest.getReason());
-        existingRequest.setUpdatedAt(LocalDate.now());
+        existingRequest.setUpdatedAt(LocalDateTime.now());
         return leaveRequestRepository.save(existingRequest);
     }
 
@@ -77,7 +78,7 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
         request.setStatus(LeaveStatus.APPROVED);
         request.setApprover(approver);
         request.setApproverComment(comment);
-        request.setUpdatedAt(LocalDate.now());
+        request.setUpdatedAt(LocalDateTime.now());
         return leaveRequestRepository.save(request);
     }
 
@@ -88,7 +89,7 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
         request.setStatus(LeaveStatus.REJECTED);
         request.setApprover(approver);
         request.setApproverComment(comment);
-        request.setUpdatedAt(LocalDate.now());
+        request.setUpdatedAt(LocalDateTime.now());
         return leaveRequestRepository.save(request);
     }
 
@@ -100,7 +101,7 @@ public class LeaveRequestServiceImpl implements LeaveRequestService {
             throw new RuntimeException("Only the requester can cancel their leave request");
         }
         request.setStatus(LeaveStatus.CANCELLED);
-        request.setUpdatedAt(LocalDate.now());
+        request.setUpdatedAt(LocalDateTime.now());
         return leaveRequestRepository.save(request);
     }
 } 

@@ -1,8 +1,10 @@
 package com.africahr.leave.service.impl;
 
+import com.africahr.leave.model.LeaveCalendar;
 import com.africahr.leave.model.LeaveRequest;
 import com.africahr.leave.model.LeaveStatus;
 import com.africahr.leave.model.User;
+import com.africahr.leave.repository.LeaveCalendarRepository;
 import com.africahr.leave.repository.LeaveRequestRepository;
 import com.africahr.leave.repository.UserRepository;
 import com.africahr.leave.service.TeamCalendarService;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 public class TeamCalendarServiceImpl implements TeamCalendarService {
     private final LeaveRequestRepository leaveRequestRepository;
     private final UserRepository userRepository;
+    private final LeaveCalendarRepository leaveCalendarRepository;
 
     @Override
     public List<LeaveRequest> getTeamCalendar(Long departmentId, LocalDate startDate, LocalDate endDate) {
@@ -65,5 +68,23 @@ public class TeamCalendarServiceImpl implements TeamCalendarService {
         LocalDate startDate = LocalDate.now().plusDays(1);
         LocalDate endDate = startDate.plusMonths(1);
         return getTeamCalendar(departmentId, startDate, endDate);
+    }
+
+    @Override
+    public List<LeaveCalendar> getTeamLeaveCalendar(LocalDate startDate, LocalDate endDate) {
+        return leaveCalendarRepository.findByDateBetween(startDate, endDate);
+    }
+
+    @Override
+    public List<LeaveCalendar> getDepartmentLeaveCalendar(Long departmentId, LocalDate startDate, LocalDate endDate) {
+        List<LeaveRequest> approvedRequests = leaveRequestRepository.findByUserDepartmentIdAndStatus(departmentId, LeaveStatus.APPROVED);
+        return approvedRequests.stream()
+                .flatMap(request -> leaveCalendarRepository.findByLeaveRequestAndDateBetween(request, startDate, endDate).stream())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<LeaveCalendar> getTeamLeaveCalendarByUser(Long userId, LocalDate startDate, LocalDate endDate) {
+        return leaveCalendarRepository.findByUserIdAndDateBetween(userId, startDate, endDate);
     }
 } 

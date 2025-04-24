@@ -13,13 +13,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class TeamCalendarDto {
     private Long id;
-    private String title;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private String status;
-    private String leaveType;
-    private String employeeName;
-    private String department;
-    private boolean isHalfDay;
-    private String reason;
+    private Long userId;
+    private String userName;
+    private Long leaveRequestId;
+    private LocalDate date;
+    private boolean isFullDay;
+    private String description;
 } 

@@ -9,7 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -20,7 +21,7 @@ public class LeaveBalanceServiceImpl implements LeaveBalanceService {
     @Override
     @Transactional
     public LeaveBalance createLeaveBalance(LeaveBalance leaveBalance) {
-        leaveBalance.setLastUpdated(LocalDate.now());
+        leaveBalance.setLastUpdated(LocalDateTime.now());
         return leaveBalanceRepository.save(leaveBalance);
     }
 
@@ -32,7 +33,7 @@ public class LeaveBalanceServiceImpl implements LeaveBalanceService {
         existingBalance.setUsedDays(leaveBalance.getUsedDays());
         existingBalance.setRemainingDays(leaveBalance.getRemainingDays());
         existingBalance.setCarriedForwardDays(leaveBalance.getCarriedForwardDays());
-        existingBalance.setLastUpdated(LocalDate.now());
+        existingBalance.setLastUpdated(LocalDateTime.now());
         return leaveBalanceRepository.save(existingBalance);
     }
 
@@ -70,16 +71,17 @@ public class LeaveBalanceServiceImpl implements LeaveBalanceService {
     @Transactional
     public LeaveBalance adjustLeaveBalance(Long id, double adjustment) {
         LeaveBalance balance = getLeaveBalanceById(id);
-        double newUsedDays = balance.getUsedDays() + adjustment;
-        double newRemainingDays = balance.getTotalDays() - newUsedDays;
+        BigDecimal adjustmentDecimal = BigDecimal.valueOf(adjustment);
+        BigDecimal newUsedDays = balance.getUsedDays().add(adjustmentDecimal);
+        BigDecimal newRemainingDays = balance.getTotalDays().subtract(newUsedDays);
         
-        if (newRemainingDays < 0) {
+        if (newRemainingDays.compareTo(BigDecimal.ZERO) < 0) {
             throw new RuntimeException("Insufficient leave balance");
         }
         
         balance.setUsedDays(newUsedDays);
         balance.setRemainingDays(newRemainingDays);
-        balance.setLastUpdated(LocalDate.now());
+        balance.setLastUpdated(LocalDateTime.now());
         
         return leaveBalanceRepository.save(balance);
     }

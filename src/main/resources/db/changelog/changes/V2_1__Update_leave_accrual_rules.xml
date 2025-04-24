@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+
+    <changeSet id="2_1" author="africahr">
+        <!-- Add expiration_days column -->
+        <addColumn tableName="leave_accrual_rules">
+            <column name="expiration_days" type="integer" defaultValue="365">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <!-- Rename active to is_active -->
+        <renameColumn tableName="leave_accrual_rules" 
+                     oldColumnName="active" 
+                     newColumnName="is_active"/>
+
+        <!-- Rename max_carry_forward to max_carry_forward_days -->
+        <renameColumn tableName="leave_accrual_rules" 
+                     oldColumnName="max_carry_forward" 
+                     newColumnName="max_carry_forward_days"/>
+
+        <!-- Change accrual_rate type from numeric to decimal -->
+        <modifyDataType tableName="leave_accrual_rules"
+                       columnName="accrual_rate"
+                       newDataType="decimal(10,2)"/>
+    </changeSet>
+</databaseChangeLog> 

@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -32,8 +33,8 @@ public class LeaveRequestController {
         User requestingUser = userService.getUserById(leaveRequestDto.getUserId());
         LeaveRequest leaveRequest = mapDtoToLeaveRequest(leaveRequestDto, requestingUser);
         leaveRequest.setStatus(LeaveStatus.PENDING);
-        leaveRequest.setCreatedAt(LocalDate.now());
-        leaveRequest.setUpdatedAt(LocalDate.now());
+        leaveRequest.setCreatedAt(LocalDateTime.now());
+        leaveRequest.setUpdatedAt(LocalDateTime.now());
         return ResponseEntity.ok(leaveRequestService.createLeaveRequest(leaveRequest));
     }
 
@@ -48,7 +49,7 @@ public class LeaveRequestController {
         updatedRequest.setId(id);
         updatedRequest.setCreatedAt(existingRequest.getCreatedAt());
         updatedRequest.setStatus(existingRequest.getStatus());
-        updatedRequest.setUpdatedAt(LocalDate.now());
+        updatedRequest.setUpdatedAt(LocalDateTime.now());
 
         return ResponseEntity.ok(leaveRequestService.updateLeaveRequest(id, updatedRequest));
     }

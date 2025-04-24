@@ -27,13 +27,13 @@ public class LeaveAccrualRule {
     @Column(nullable = false)
     private AccrualFrequency accrualFrequency;
 
-    @Column(nullable = false)
-    private Integer maxCarryForward;
+    @Column(name = "max_carry_forward_days", nullable = false)
+    private Integer maxCarryForwardDays;
 
     @Column(nullable = false)
     private Integer expirationDays;
 
-    @Column(nullable = false)
+    @Column(name = "is_active", nullable = false)
     private boolean active = true;
 
     @CreationTimestamp
@@ -41,8 +41,8 @@ public class LeaveAccrualRule {
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(nullable = false)
-    private LocalDateTime lastUpdated;
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
 
     public enum AccrualFrequency {
         MONTHLY,

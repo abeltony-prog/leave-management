@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -55,8 +56,8 @@ public class LeaveRequest {
     private List<Document> documents;
     
     @Column(nullable = false)
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
     
     @Column
-    private LocalDate updatedAt;
+    private LocalDateTime updatedAt;
 } 
