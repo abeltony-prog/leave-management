@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "documents")
@@ -22,15 +22,26 @@ public class Document {
     private String fileName;
     
     @Column(nullable = false)
-    private String filePath;
+    private String fileType;
     
     @Column(nullable = false)
-    private String fileType;
+    private Long fileSize;
+    
+    @Column(nullable = false)
+    private String filePath;
     
     @ManyToOne
     @JoinColumn(name = "leave_request_id", nullable = false)
     private LeaveRequest leaveRequest;
     
     @Column(nullable = false)
-    private LocalDate uploadedAt;
+    private LocalDateTime uploadedAt;
+    
+    @Column
+    private String description;
+    
+    @PrePersist
+    protected void onCreate() {
+        uploadedAt = LocalDateTime.now();
+    }
 } 

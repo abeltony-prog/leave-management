@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface DocumentRepository extends JpaRepository<Document, Long> {
     List<Document> findByLeaveRequest(LeaveRequest leaveRequest);
-    void deleteByLeaveRequest(LeaveRequest leaveRequest);
+    List<Document> findByLeaveRequestId(Long leaveRequestId);
 } 
